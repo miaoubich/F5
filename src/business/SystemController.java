@@ -41,5 +41,18 @@ public class SystemController implements ControllerInterface {
 		return retval;
 	}
 	
+	@Override
+	public Book addBookCopy(String isbn) throws Exception {
+		DataAccess da = new DataAccessFacade();
+		HashMap<String, Book> bookMap = da.readBooksMap();
+		if (!bookMap.containsKey(isbn))
+			throw new Exception("No book found, couldn't add new copy");
+		Book b = bookMap.get(isbn);
+		b.addCopy();
+		da.updateBook(b);
+		
+		return b;
+	}
+	
 	
 }
