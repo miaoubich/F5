@@ -5,7 +5,7 @@ import java.util.List;
 //SS
 public class CheckoutRecord implements Serializable {
 	
-	private static final long serialVersionUID = 12345L;
+	private static final long serialVersionUID;
 	
 	private List<CheckoutRecordEntry> checkoutRecordEntryList;
 	
@@ -33,6 +33,6 @@ public class CheckoutRecord implements Serializable {
 		this.libraryMem = libraryMem;
 	}
 	
-	
+	//SS test 1234
 
 }
