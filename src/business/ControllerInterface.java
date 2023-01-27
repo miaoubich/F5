@@ -12,4 +12,7 @@ public interface ControllerInterface {
 	public List<String> allBookIds();
 	public Book addBookCopy(String isbn) throws Exception;
 	
+	public BookCopy checkoutBook(String LibraryMemberId, String isbn) throws Exception;
+	public List<CheckoutRecordEntry> getCheckoutRecordByMemberId(String libraryMemberId) throws Exception;
+	
 }

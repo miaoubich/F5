@@ -2,7 +2,7 @@ package business;
 
 import java.io.Serializable;
 import java.util.List;
-//SS
+
 public class CheckoutRecord implements Serializable {
 	
 	private static final long serialVersionUID;
@@ -33,6 +33,5 @@ public class CheckoutRecord implements Serializable {
 		this.libraryMem = libraryMem;
 	}
 	
-	//SS test 1234
 
 }

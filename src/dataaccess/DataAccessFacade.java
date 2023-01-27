@@ -18,7 +18,7 @@ import dataaccess.DataAccessFacade.StorageType;
 public class DataAccessFacade implements DataAccess {
 	
 	enum StorageType {
-		BOOKS, MEMBERS, USERS;
+		BOOKS, MEMBERS, USERS, BOOKCOPIES, CHECKOUTRECORDENTRY,CHECKOUTRECORD;
 	}
 	
 	public static final String OUTPUT_DIR = System.getProperty("user.dir") 
@@ -32,6 +32,69 @@ public class DataAccessFacade implements DataAccess {
 		mems.put(memberId, member);
 		saveToStorage(StorageType.MEMBERS, mems);	
 	}
+	
+	@Override
+	public void saveCheckoutRecordEntry(CheckoutRecordEntry checkOutRE) {
+		HashMap<Integer, CheckoutRecordEntry> checkoutRecordEntryMap = readCheckoutRecordEntry();
+		Integer uCheckoutId = 1;
+		checkoutRecordEntryMap.put(uCheckoutId, checkOutRE);
+		saveToStorage(StorageType.CHECKOUTRECORDENTRY, checkOutRE);
+	}
+
+	@Override
+	public void saveToCheckoutRecord(String memberId, CheckoutRecordEntry checkOutRE) {
+		HashMap<String, List<CheckoutRecordEntry>> checkoutRecordList = readCheckoutRecord();
+		if (checkoutRecordList.containsKey(memberId)) {
+			List<CheckoutRecordEntry> updateCheckoutList = checkoutRecordList.get(memberId);
+			updateCheckoutList.add(checkOutRE);
+			checkoutRecordList.put(memberId, updateCheckoutList);
+		} else {
+			List<CheckoutRecordEntry> newList = new ArrayList<>();
+			newList.add(checkOutRE);
+			checkoutRecordList.put(memberId, newList);
+		}
+		saveToStorage(StorageType.CHECKOUTRECORD, checkoutRecordList);
+	}
+
+	@Override
+	public void saveCheckoutRecord(String memberId, List<CheckoutRecordEntry> checkOutREList) {
+		HashMap<String, List<CheckoutRecordEntry>> checkoutRecordList = readCheckoutRecord();
+		if (checkoutRecordList.containsKey(memberId)) {
+			List<CheckoutRecordEntry> updateCheckoutList = checkoutRecordList.get(memberId);
+			updateCheckoutList.addAll(checkOutREList);
+			checkoutRecordList.put(memberId, updateCheckoutList);
+		} else {
+			checkoutRecordList.put(memberId, checkOutREList);
+		}
+		saveToStorage(StorageType.CHECKOUTRECORD, checkoutRecordList);
+	}
+	
+	public List<CheckoutRecordEntry> getCheckoutRecordByMemberId(String libraryMemberId) {
+		List<CheckoutRecordEntry> checkoutList = null;
+		HashMap<String, List<CheckoutRecordEntry>> checkoutMap = readCheckoutRecord();
+		if (checkoutMap.containsKey(libraryMemberId)) {
+			checkoutList = checkoutMap.get(libraryMemberId);
+		}
+		return checkoutList;
+	}
+	
+	@Override
+	public HashMap<Integer, BookCopy> readBookCopy() {
+		return null;
+	}
+	
+	public HashMap<String, HashMap<Integer, BookCopy>> readBookCopies() {
+		return (HashMap<String, HashMap<Integer, BookCopy>>) readFromStorage(StorageType.BOOKCOPIES);
+	}
+
+	private HashMap<Integer, CheckoutRecordEntry> readCheckoutRecordEntry() {
+		return (HashMap<Integer, CheckoutRecordEntry>) readFromStorage(StorageType.CHECKOUTRECORDENTRY);
+	}
+
+	public HashMap<String, List<CheckoutRecordEntry>> readCheckoutRecord() {
+		return (HashMap<String, List<CheckoutRecordEntry>>) readFromStorage(StorageType.CHECKOUTRECORD);
+	}
+
 	
 	@SuppressWarnings("unchecked")
 	public  HashMap<String,Book> readBooksMap() {
@@ -76,6 +139,11 @@ public class DataAccessFacade implements DataAccess {
 		HashMap<String, LibraryMember> members = new HashMap<String, LibraryMember>();
 		memberList.forEach(member -> members.put(member.getMemberId(), member));
 		saveToStorage(StorageType.MEMBERS, members);
+	}
+	
+	public static void loadCheckout() {
+		HashMap<String, List<CheckoutRecordEntry>> chechoutListMap = new HashMap<>();
+		saveToStorage(StorageType.CHECKOUTRECORD, chechoutListMap);
 	}
 	
 	static void saveToStorage(StorageType type, Object ob) {
