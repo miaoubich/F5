@@ -46,6 +46,7 @@ public class TestData {
 		DataAccessFacade.loadUserMap(allUsers);
 	}
 	
+	
 	//create library members
 	public void libraryMemberData() {
 		LibraryMember libraryMember = new LibraryMember("1001", "Andy", "Rogers", "641-223-2211", addresses.get(4));
@@ -76,6 +77,8 @@ public class TestData {
 			add(new Address("1435 Channing Ave", "Palo Alto", "CA", "94301"));
 			add(new Address("42 Dogwood Dr.", "Fairfield", "IA", "52556"));
 			add(new Address("501 Central", "Mountain View", "CA", "94707"));
+			add(new Address("501 Central1", "Mountain View", "CA", "94707"));
+	
 		}
 	};
 	@SuppressWarnings("serial")
